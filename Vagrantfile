@@ -9,7 +9,7 @@ github_url      = "https://raw.githubusercontent.com/#{github_username}/#{github
 
 # Server Configuration
 
-hostname        = "vaprobash.dev"
+hostname        = "laravel-playground.moc"
 
 # Set a local private network IP address.
 # See http://en.wikipedia.org/wiki/Private_network for explanation
@@ -31,7 +31,7 @@ server_timezone  = "UTC"
 # Database Configuration
 mysql_root_password   = "root"   # We'll assume user "root"
 mysql_version         = "5.5"    # Options: 5.5 | 5.6
-mysql_enable_remote   = "false"  # remote access enabled when true
+mysql_enable_remote   = "true"  # remote access enabled when true
 pgsql_root_password   = "root"   # We'll assume user "root"
 mongo_enable_remote   = "false"  # remote access enabled when true
 
@@ -85,7 +85,7 @@ Vagrant.configure("2") do |config|
   # Set server to Ubuntu 14.04
   config.vm.box = "ubuntu/trusty64"
 
-  config.vm.define "Vaprobash" do |vapro|
+  config.vm.define "LaravelPlayground" do |vapro|
   end
 
   if Vagrant.has_plugin?("vagrant-hostmanager")
@@ -104,6 +104,8 @@ Vagrant.configure("2") do |config|
   config.vm.network :private_network, ip: server_ip
   config.vm.network :forwarded_port, guest: 80, host: 8000
 
+  config.vm.network :public_network, bridge: 'en1: Wi-Fi (AirPort)'
+
   # Use NFS for the shared folder
   config.vm.synced_folder ".", "/vagrant",
             id: "core",
@@ -113,7 +115,7 @@ Vagrant.configure("2") do |config|
   # If using VirtualBox
   config.vm.provider :virtualbox do |vb|
 
-    vb.name = "Vaprobash"
+    vb.name = "LaravelPlayground"
 
     # Set server cpus
     vb.customize ["modifyvm", :id, "--cpus", server_cpus]
@@ -195,7 +197,7 @@ Vagrant.configure("2") do |config|
   ##########
 
   # Provision Apache Base
-  # config.vm.provision "shell", path: "#{github_url}/scripts/apache.sh", args: [server_ip, public_folder, hostname, github_url]
+  config.vm.provision "shell", path: "#{github_url}/scripts/apache.sh", args: [server_ip, public_folder, hostname, github_url]
 
   # Provision Nginx Base
   # config.vm.provision "shell", path: "#{github_url}/scripts/nginx.sh", args: [server_ip, public_folder, hostname, github_url]
@@ -206,7 +208,7 @@ Vagrant.configure("2") do |config|
   ##########
 
   # Provision MySQL
-  # config.vm.provision "shell", path: "#{github_url}/scripts/mysql.sh", args: [mysql_root_password, mysql_version, mysql_enable_remote]
+  config.vm.provision "shell", path: "#{github_url}/scripts/mysql.sh", args: [mysql_root_password, mysql_version, mysql_enable_remote]
 
   # Provision PostgreSQL
   # config.vm.provision "shell", path: "#{github_url}/scripts/pgsql.sh", args: pgsql_root_password
@@ -288,7 +290,7 @@ Vagrant.configure("2") do |config|
   ##########
 
   # Install Nodejs
-  # config.vm.provision "shell", path: "#{github_url}/scripts/nodejs.sh", privileged: false, args: nodejs_packages.unshift(nodejs_version, github_url)
+  config.vm.provision "shell", path: "#{github_url}/scripts/nodejs.sh", privileged: false, args: nodejs_packages.unshift(nodejs_version, github_url)
 
   # Install Ruby Version Manager (RVM)
   # config.vm.provision "shell", path: "#{github_url}/scripts/rvm.sh", privileged: false, args: ruby_gems.unshift(ruby_version)
@@ -310,7 +312,7 @@ Vagrant.configure("2") do |config|
   # config.vm.provision "shell", path: "#{github_url}/scripts/screen.sh"
 
   # Install Mailcatcher
-  # config.vm.provision "shell", path: "#{github_url}/scripts/mailcatcher.sh"
+  config.vm.provision "shell", path: "#{github_url}/scripts/mailcatcher.sh"
 
   # Install git-ftp
   # config.vm.provision "shell", path: "#{github_url}/scripts/git-ftp.sh", privileged: false
