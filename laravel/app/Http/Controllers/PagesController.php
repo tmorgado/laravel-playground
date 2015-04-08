@@ -11,9 +11,8 @@ class PagesController extends Controller {
 	public function about() {
 
 		$first = 'Tiago';
-		$last = 'Morgado';
 		//using php compact function
-		return view('pages/about', compact('first', 'last'));
+		return view('pages.about', compact('first'));
 
 		/*
 		return view('pages/about')->with([
@@ -25,6 +24,12 @@ class PagesController extends Controller {
 
 		]);
 		*/
+	}
+
+	public function contact() {
+
+		return view('pages.contact');
+
 	}
 
 }
