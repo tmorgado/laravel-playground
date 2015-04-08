@@ -10,9 +10,16 @@ class PagesController extends Controller {
 	//
 	public function about() {
 
-		$first = 'Tiago';
+		//$first = 'Tiago';
+
+		//$foods = [];
+		
+		 $foods = [
+			'pizza green', 'hamburger soy', 'soup cheese'
+		 ];
+
 		//using php compact function
-		return view('pages.about', compact('first'));
+		return view('pages.about', compact('foods'));
 
 		/*
 		return view('pages/about')->with([
